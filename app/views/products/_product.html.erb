@@ -1,0 +1,19 @@
+  <%  if(!product.closed) %>
+
+    <tr style="border-bottom:solid 1px rgba(128,13,25,0.12) ;">
+      <td style="padding-right: 30px;width:20%;text-align:center;">
+        <% p = image_tag product.photo.url(:small)%>
+        <%= link_to p, product %>
+      </td>
+      <td style="padding-right: 300px;">
+        <big><%= product.product_name %></big>    <br/><br/>
+        <%= product.description %> <br /> <br/>
+      		Current price:&nbsp; $<%= product.current_bid_price%> <br/>
+        Buy-it-now price: $<%= product.buy_out_price %> <br />
+        Time left:
+        <%= distance_of_time_in_words product.end_date, Time.now.utc %>
+
+      </td>
+    </tr>
+        <% end %>
+

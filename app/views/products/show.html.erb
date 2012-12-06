@@ -1,0 +1,174 @@
+
+    <h1><%= @product.product_name %></h1>
+    <table class="productTable">
+        <tr>
+        <!-- 1st column is just to show the images!-->
+        <td style="padding-right: 40px; width: 400px; text-align:center ;">
+          <%= image_tag @product.photo.url(:large)%>
+        </td>
+
+        <!-- 2nd column is to show the remainder of the information about the product!-->
+
+          <td>
+            <table class="products">
+              <tr style="border-bottom:solid 1px rgba(128,13,25,0.12) ;">
+
+                <td >
+                  <big><%= @product.product_name %></big>    <br/><br/>
+                  <% if @product.current_bid_id.nil? %>
+                      Start price:&nbsp;
+                  <% else %>
+                      Current price:&nbsp;
+                  <% end %>
+                  $<%= @product.current_bid_price %> <br/><br/>
+				  Buy-it-now price: $<%= @product.buy_out_price %> <br /><br/>
+                  Seller : <%= @seller.first_name + " " + @seller.last_name + " | "+ @seller.email  %>  
+				  <% if !@seller.rating.nil? %>
+					<% total = 5 %>
+					<% integ = @seller.rating.to_i; %>
+					<% decim = @seller.rating.to_f - @seller.rating.to_i.to_f; %>
+					<% while (integ != 0) %>
+					  <%= image_tag "full.png" %>
+					  <% integ -= 1 %>
+					  <% total -= 1 %>
+					<% end %>
+					<% if (decim >= 0.5) %>
+					  <%= image_tag "half.png" %>
+					  <% total -= 1 %>
+					<% end %>
+					<% while (total != 0) %>
+					  <%= image_tag "empty.png" %>
+					  <% total -= 1 %>
+					<% end %>
+				  <% end %>
+				  
+				  <br/><br/>
+				  
+                  <%= @product.description %> <br /><br/>
+                  <% if !@product.closed %>
+                      Time left:
+                      <%= distance_of_time_in_words @product.end_date, Time.now.utc %>
+                      <% if (!current_user.nil?) && (@product.owner_id != current_user.id) %>
+                      <form action='<%= @product.id %>/bid' method='get' class="form-search">
+                        <div class="input-prepend">
+                          <span class="add-on">$</span><input type="text" name="bid" class="span2" id="appendedPrependedInput">
+                        </div>
+                        <input type="submit" name="Bid" value="Bid" class="btn btn-primary">
+                      </form>
+                      <form action='<%= @product.id %>/buyout' method='get' class="form-search">
+                        <input type="submit" name="BuyNow" value="Buy Now" class="btn btn-primary">
+                      </form>
+                      <% elsif (!current_user.nil?) && @product.owner_id == current_user.id && @product.current_bid_id.nil? %>
+                      <form action='<%= @product.id%>/cancel' method='get' class="form-search">
+                        <input type="submit" name="cancel" value="Cancel auction" class="btn btn-primary">
+                      </form>
+                      <% end %>
+                  <% else %>
+                    <% if !@product.rating.nil? %>
+						Buyer's Rating:
+						<% temp = @product.rating %>
+						<% while (temp != 0) %>
+						  <%= image_tag "full.png" %>
+						  <% temp -= 1 %>
+						<% end %>
+						<% temp = 5 - @product.rating %>
+						<% while (temp != 0) %>
+						  <%= image_tag "empty.png" %>
+						  <% temp -= 1 %>
+						<% end %>
+					<br />
+                    <% else%>
+
+                          <% if !@product.current_bid_id.nil? && @product.current_bid_id == current_user.id && @product.closed %>
+                              <%= image_tag("empty.png", :id => "star1", :onmouseover => "mouseover(this)", :onclick => "click1(this)") %>
+                              <%= image_tag("empty.png", :id => "star2", :onmouseover => "mouseover(this)", :onclick => "click1(this)") %>
+                              <%= image_tag("empty.png", :id => "star3", :onmouseover => "mouseover(this)", :onclick => "click1(this)") %>
+                              <%= image_tag("empty.png", :id => "star4", :onmouseover => "mouseover(this)", :onclick => "click1(this)") %>
+                              <%= image_tag("empty.png", :id => "star5", :onmouseover => "mouseover(this)", :onclick => "click1(this)") %>
+
+                              <form action='<%= @product.id %>/rate' method='get' class="form-search">
+                              <input type="hidden" name="rate" class="span2" id="appendedPrependedInput" value="1">
+                            <input type="submit" name="Rate" value="Rate" class="btn btn-primary">
+                          </form>
+                          <% end %>
+                    <% end %>
+                  <% end %>
+                 
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <% if @product.closed? && current_user!=nil && (@product.owner_id == current_user.id || @product.current_bid_id == current_user.id)%>
+        <tr>
+          <% if @buyer.nil? %>
+              <td>Nobody buys...</td>
+          <% else %>
+            <td>Seller:
+                <%= @seller.first_name + " " + @seller.last_name%><br/>
+                <%= @seller.phone %> <br/>
+                <%= @seller.email %><br/>
+                <%= @seller.address %><br/>
+            </td>
+            <td>Buyer:
+                <%= @buyer.first_name + " " + @buyer.last_name%><br/>
+                <%= @buyer.phone %> <br/>
+                <%= @buyer.email %><br/>
+                <%= @buyer.address %><br/>
+            </td>
+          <%end %>
+        </tr>
+        <% end %>
+
+   </table>
+
+<script>
+var y = 0
+
+function mouseover(num)
+{
+	if (y == 0)
+	{
+		var num = num.id.substring(4,5);
+		var i=num
+		
+		for (; i>0; i--)
+		{
+			var idtag = "star" + i;
+			var x=document.getElementById(idtag);
+			x.src = "/assets/full.png";
+		}
+		
+		num++;
+		for (; num<=5; num++)
+		{
+			var idtag = "star" + num;
+			var x=document.getElementById(idtag);
+			x.src = "/assets/empty.png";
+		}
+	}
+}
+
+function click1(num)
+{
+	y = 1;
+	var num = num.id.substring(4,5);
+	var rating = document.getElementById("appendedPrependedInput");
+	rating.value = num;
+	var i=num
+	for (; i>0; i--)
+	{
+		var idtag = "star" + i;
+		var x=document.getElementById(idtag);
+		x.src = "/assets/full.png";
+	}
+	
+	num++;
+	for (; num<=5; num++)
+	{
+		var idtag = "star" + num;
+		var x=document.getElementById(idtag);
+		x.src = "/assets/empty.png";
+	}
+}
+</script>

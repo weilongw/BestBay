@@ -1,0 +1,35 @@
+
+<div class="row">
+  <%= render 'shared/sidebar' %>
+  
+  <div class="span6 ">
+    <h1>
+	  All your sellings here.
+	</h1>
+    <table class="products">
+      <% @product_all.each do |pro| %>
+          <% if pro.owner_id == @user.id %>
+              <tr style="border-bottom:solid 1px rgba(128,13,25,0.12) ;">
+                <td style="padding-right: 30px;width:20%;">
+
+                    <% p = image_tag pro.photo.url(:small)%>
+                    <%= link_to p, pro %>
+                <td/>
+                <td style="padding-right: 100px;">
+
+                    <big><%= pro.product_name %></big>    <br/><br/>
+                    Current price:&nbsp; <%= pro.current_bid_price%> <br/> <br/>
+                    <%= pro.description %> <br />
+                    Time left:
+                    <%= distance_of_time_in_words pro.end_date, Time.now.utc %>
+                <td/>
+              </tr>
+
+          <% end %>
+
+      <% end %>
+    </table>
+  </div>
+  
+</div>
+

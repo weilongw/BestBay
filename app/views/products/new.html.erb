@@ -1,0 +1,52 @@
+
+
+
+<div class="row">
+  <%= render 'shared/sidebar' %>
+
+
+
+<div class="span8">
+  <h1><i>Post product</i></h1>
+
+
+    <%= form_for @product, :html => { :multipart =>true } do |f| %>
+
+        <%= render 'shared/error_messages', object: f.object %>
+
+        Product Name: </br>
+        <%= f.text_field :product_name %>
+
+        <p>
+          Starting price: <br/>
+          <input type="text" name="product[start_price]">
+        </p>
+
+        <p>
+          Buy out price (optional): <br/>
+          <input type="text"  name="product[buy_out_price]">
+        </p>
+        <p>
+            End_Bid_Time: <br />
+            <%=  f.date_select :end_date, {:use_short_month => 1, :order => [:month, :day, :year],:default => 2.days.from_now.localtime},{:class => "end_date_style"}  %>
+            <%=  f.time_select :end_date, {:ignore_date => true,:default => 2.days.from_now.localtime},{:class => "end_date_style"} %>
+        </p>
+		 <select name="product[category_id]">
+            <%= options_for_select(@categories) %>
+          </select>
+        <p>
+          Product Image:
+          <%= f.file_field :photo %>
+        </p>
+        Description: <br/>
+        <%= f.text_area :description, placeholder: "Tell us more about your product...", rows: "10" %>
+        <input type="hidden" name="product[owner_id]" value=<%=current_user.id%> >
+        <%= f.submit "Post!", class: "btn btn-large btn-primary" %>
+    <% end %>
+
+</div>
+
+</div>
+
+
+

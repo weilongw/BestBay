@@ -1,0 +1,49 @@
+  <aside class="span3">
+    <section>
+      <h1>
+        Welcome ! <%= current_user.first_name %>, <br><%= current_user.email %>
+	  </h1>
+		<br> Your rating:
+		<% if !current_user.rating.nil? %>
+			<% total = 5 %>
+			<% integ = current_user.rating.to_i; %>
+			<% decim = current_user.rating.to_f - integ.to_f; %>
+			<% while (integ != 0) %>
+			  <%= image_tag "full.png" %>
+			  <% integ -= 1 %>
+			  <% total -= 1 %>
+			<% end %>
+			<% if (decim >= 0.5) %>
+			  <%= image_tag "half.png" %>
+			  <% total -= 1 %>
+			<% end %>
+			<% while (total != 0) %>
+			  <%= image_tag "empty.png" %>
+			  <% total -= 1 %>
+			<% end %>
+		<% end %>
+		<br>
+		<hr>
+		<h1>
+		<%= link_to "Profile", "/profile" %>
+		<br>
+		<hr>
+		<%= link_to "My Buying", "/buying" %>
+		<br>
+		<hr>
+		<%= link_to "My Selling", "/selling" %>
+		<br>
+		<hr>
+		<% num = new_notification %>
+        <% if num == 0 %>
+		  <% num_note = "My Notification" %>
+		<% else %>
+		  <% num_note = "My Notification[" + num.to_s() + "]" %>
+		<% end %>
+		<%= link_to num_note, "/notification", :id => "notification_sidebar" %>
+		<hr>
+		<%= link_to "Post an Item", "/post" %>
+		<hr>
+      </h1>
+    </section>
+  </aside>

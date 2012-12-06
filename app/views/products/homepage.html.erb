@@ -1,0 +1,96 @@
+<style type="text/css">
+	.hehe img {
+		height:320px;
+	}
+</style>
+
+<h1>What's Popular Now!!!</h1>
+
+<form action='/search' method='get' class="form-search">
+  <table>
+    <tr>
+    <td style="padding-right: 50px;">
+  <div class="input-append">
+  	<input type="text" name="search" placeholder="find something you like..." style="width:600px; border-radius:10px">
+  	<input type="submit" name="commit" value="Search" class="btn btn-primary">
+  </div>
+      </td>
+      <td>
+        <div class="search_category">
+          <select name="category">
+            <option value="0">All products</option>
+            <%= options_for_select(@categories) %>
+          </select>
+        </div>
+      </td>
+      </tr>
+    <tr>
+      <td>
+        &nbsp;<label class="radio inline"><input type="radio" name="sort" value="time" checked> By time</label>
+        &nbsp;&nbsp;<label class="radio inline"><input type="radio" name="sort" value="price"> By price</label>
+      </td>
+    </tr>
+  </table>
+</form>
+
+
+<center>
+
+
+<div id="myCarousel" class="carousel slide">  
+  <!-- Carousel items -->  
+  <div class="carousel-inner">  
+    <div class="active item">
+		<% if !@products.first.nil? %>
+		<div class="hehe">
+		<% p = image_tag @products.first.photo.url(:large) %>
+		<%= link_to p, @products.first %>
+		<br/>
+		<big><%= @products.first.product_name %></big>
+		</div>
+		<% end %>
+	</div>
+	<% @products.each do |pproduct| %>
+	<% if @products.first.id != pproduct.id %>
+    <div class="item">
+		<div class="hehe">
+		<% p = image_tag pproduct.photo.url(:large) %>
+		<%= link_to p, pproduct %>
+		<br/>
+		<big><%= pproduct.product_name %></big>
+		</div>
+	</div>
+	<% end %>
+    <% end %>
+  </div>  
+  <!-- Carousel nav -->  
+  <a class="carousel-control left" href="#myCarousel" data-slide="prev">‹</a>  
+  <a class="carousel-control right" href="#myCarousel" data-slide="next">›</a>  
+</div>  
+
+<table class="popular_table">
+
+<% i = 0 %>
+<% @products.each do |pproduct| %>
+	<% if i%3 == 0 %>
+		<tr class="popular_cell">
+	<% end %>
+		<td class="popular_cell">
+			<% p = image_tag pproduct.photo.url(:small)%>
+			<%= link_to p, pproduct %><br>
+			<big><%= pproduct.product_name %></big>
+		</td>
+	<% if i%3 == 2 %>
+		</tr>
+	<% end %>
+	
+	<% i = i + 1 %>
+	<% if i == 9 %>
+		<% break %>
+	<% end %>
+	
+<% end %>
+
+</table>
+
+</center>

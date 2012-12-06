@@ -1,0 +1,49 @@
+
+<div class="row">
+  <%= render 'shared/sidebar' %>
+  
+  <div class="span6 ">
+    <h1>
+	  Your Notifications:
+	</h1>
+	<%= will_paginate @notification_all %>
+    <ul>
+	  <% @notification_all.each do |note| %>
+	    <% if note.user_id == @user.id %>
+          <hr>
+		   <% button_id = 'button' + note.id.to_s() %>
+		  <table>
+		  <tr><td class="notification">
+		    <%= note.post.html_safe %><br>
+  		    <%= distance_of_time_in_words note.created_at, Time.now.utc %> ago
+		  </td><td id="<%= button_id %>">  
+		  <% if note.unread == 1 %>
+			<%= form_for(@read) do |f| %>
+			   
+			  <%= f.hidden_field :id, :value => note.id %>
+              <%= f.submit "Mark as Read", class: "btn btn-small btn-primary" %>
+            <% end %>
+		  <% end %>
+		  </td></tr>
+		  </table>
+        <% end %>
+	  <% end %>
+	  <hr>
+    </ul>
+  </div>
+<!--
+  <div class="span3 ">
+    Post debug notification here<br>
+	U can post to any user<br>
+	<%= form_for(@notification) do |f| %>
+	  <%= render 'shared/error_messages', object: f.object %>
+      <%= f.label :post %>
+      <%= f.text_field :post %>
+	  <%= f.label :user_id %>
+      <%= f.text_field :user_id %>
+      <%= f.submit "Create debug notification", class: "btn btn-large btn-primary" %>
+    <% end %>
+  </div>
+!-->
+</div>
+

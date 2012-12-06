@@ -1,0 +1,5 @@
+
+Welcome ! <%= @user.first_name %>, <%= @user.email %>
+<% if !@user.rating.nil? %>
+<%= @user.rating %>
+<% end %>
